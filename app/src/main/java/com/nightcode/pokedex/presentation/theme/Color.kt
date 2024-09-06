@@ -1,4 +1,4 @@
-package com.nightcode.pokedex.ui.theme
+package com.nightcode.pokedex.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
