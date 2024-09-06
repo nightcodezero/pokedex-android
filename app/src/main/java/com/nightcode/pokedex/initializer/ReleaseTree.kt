@@ -3,7 +3,6 @@ package com.nightcode.pokedex.initializer
 import android.util.Log
 import timber.log.Timber
 
-
 class ReleaseTree : Timber.Tree() {
     override fun log(
         priority: Int,
@@ -16,4 +15,3 @@ class ReleaseTree : Timber.Tree() {
         }
     }
 }
-

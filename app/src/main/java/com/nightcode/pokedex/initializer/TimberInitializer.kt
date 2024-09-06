@@ -2,8 +2,8 @@ package com.nightcode.pokedex.initializer
 
 import android.content.Context
 import androidx.startup.Initializer
-import timber.log.Timber
 import com.nightcode.pokedex.BuildConfig
+import timber.log.Timber
 
 class TimberInitializer : Initializer<Unit> {
     override fun create(context: Context) {
@@ -17,4 +17,3 @@ class TimberInitializer : Initializer<Unit> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> = listOf()
 }
-
