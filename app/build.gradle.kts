@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -31,10 +33,26 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
+
+    flavorDimensions.add("env")
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Pokedex Dev")
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
+        }
+        create("prod") {
+            dimension = "env"
+            resValue("string", "app_name", "Pokedex")
+            buildConfigField("String", "BASE_URL", "\"https://pokeapi.co/api/v2/\"")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -54,12 +72,27 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
 
-detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-    config.setFrom("$rootDir/detekt.yml")
+    detekt {
+        buildUponDefaultConfig = true // preconfigure defaults
+        allRules = false // activate all available (even unstable) rules.
+        config.setFrom("$rootDir/detekt.yml")
+    }
+
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        version.set("1.3.0")
+        debug.set(false)
+        verbose.set(true)
+        android.set(true)
+        outputToConsole.set(true)
+        enableExperimentalRules.set(false)
+        ignoreFailures.set(false)
+        additionalEditorconfig.set(
+            mapOf(
+                "insert_final_newline" to "false",
+            ),
+        )
+    }
 }
 
 dependencies {
@@ -74,6 +107,18 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.timber)
     implementation(libs.androidx.startup.runtime)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.logging.interceptor)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.animation)
+    implementation(libs.kmpalette.core)
+    implementation(libs.kmpalette.extensions.network)
+    implementation(libs.ktor.client.android)
+    implementation(libs.rebugger)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
