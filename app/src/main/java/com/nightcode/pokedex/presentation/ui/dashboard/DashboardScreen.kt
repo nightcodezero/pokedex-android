@@ -13,7 +13,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +62,7 @@ import com.nightcode.pokedex.data.network.model.PokemonDTO
 import com.nightcode.pokedex.presentation.ui.info.CommonState
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreenRoute
 import com.nightcode.pokedex.presentation.ui.info.PokemonViewModel
+import com.nightcode.pokedex.utils.reachedBottom
 import com.nightcode.pokedex.utils.toHexString
 import io.ktor.http.Url
 import kotlinx.serialization.Serializable
@@ -81,13 +83,21 @@ fun SharedTransitionScope.DashboardScreen(
 ) {
     val uiState by viewModel.pokemonUiState.collectAsStateWithLifecycle()
     val colorCache = rememberSaveable { mutableMapOf<String, Color>() }
+    val gridState = rememberLazyGridState()
+    val reachedBottom: Boolean by remember { derivedStateOf { gridState.reachedBottom() } }
 
-    if (uiState is CommonState.Idle) {
-        LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {
+        if (uiState is CommonState.Idle) {
             viewModel.fetchPokemonListAndDetail()
         }
-    } else {
-        Timber.d("Pokemon list already fetched")
+    }
+
+    // load more if scrolled to bottom
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) {
+            Timber.tag("DashboardScreen").d("Reached bottom")
+            viewModel.fetchMorePokemon()
+        }
     }
 
     Scaffold(
@@ -132,169 +142,58 @@ fun SharedTransitionScope.DashboardScreen(
             when (val state = viewModel.pokemonUiState.collectAsState().value) {
                 is CommonState.Idle -> {}
                 is CommonState.Loading -> {
-                    val fakeData =
-                        List(20) { PokemonDTO(id = it, name = "", imageUrl = "", bgColor = "") }
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 128.dp),
-                        contentPadding = PaddingValues(8.dp),
-                    ) {
-                        items(fakeData.size) { _ ->
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .padding(8.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .height(210.dp)
-                                        .background(color = Color.Gray)
-                                        .shimmerEffect(),
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .clip(RoundedCornerShape(bottomEnd = 8.dp))
-                                                .size(24.dp)
-                                                .background(color = Color.LightGray)
-                                                .align(Alignment.Start)
-                                                .shimmerEffect(),
-                                    )
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .clip(
-                                                    RoundedCornerShape(
-                                                        topStart = 8.dp,
-                                                        bottomEnd = 8.dp,
-                                                    ),
-                                                ).width(100.dp)
-                                                .height(24.dp)
-                                                .background(color = Color.Gray)
-                                                .align(Alignment.End)
-                                                .shimmerEffect(),
-                                    )
-                                }
-                            }
-                        }
-                    }
+//                    if (viewModel.offset.collectAsStateWithLifecycle().value == 20) {
+//                        val fakeData =
+//                            List(20) { PokemonDTO(id = it, name = "", imageUrl = "", bgColor = "") }
+//                        LazyVerticalGrid(
+//                            columns = GridCells.Adaptive(minSize = 128.dp),
+//                            contentPadding = PaddingValues(8.dp),
+//                        ) {
+//                            items(fakeData.size) { _ ->
+//                                Box(
+//                                    modifier =
+//                                        Modifier
+//                                            .padding(8.dp)
+//                                            .clip(RoundedCornerShape(8.dp))
+//                                            .height(210.dp)
+//                                            .background(color = Color.Gray)
+//                                            .shimmerEffect(),
+//                                ) {
+//                                    Column(
+//                                        modifier = Modifier.fillMaxWidth(),
+//                                        horizontalAlignment = Alignment.CenterHorizontally,
+//                                    ) {
+//                                        Box(
+//                                            modifier =
+//                                                Modifier
+//                                                    .clip(RoundedCornerShape(bottomEnd = 8.dp))
+//                                                    .size(24.dp)
+//                                                    .background(color = Color.LightGray)
+//                                                    .align(Alignment.Start)
+//                                                    .shimmerEffect(),
+//                                        )
+//                                        Spacer(modifier = Modifier.weight(1f))
+//                                        Box(
+//                                            modifier =
+//                                                Modifier
+//                                                    .clip(
+//                                                        RoundedCornerShape(
+//                                                            topStart = 8.dp,
+//                                                            bottomEnd = 8.dp,
+//                                                        ),
+//                                                    ).width(100.dp)
+//                                                    .height(24.dp)
+//                                                    .background(color = Color.Gray)
+//                                                    .align(Alignment.End)
+//                                                    .shimmerEffect(),
+//                                        )
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                 }
-
-                is CommonState.Success -> {
-                    val data = state.data
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 128.dp),
-                        contentPadding = PaddingValues(8.dp),
-                    ) {
-                        items(data.size) { item ->
-                            val pokemon = data[item]
-                            val dominantColor =
-                                colorCache[pokemon.name] ?: run {
-                                    val networkLoader = rememberNetworkLoader()
-                                    val dominantColorState =
-                                        rememberDominantColorState(
-                                            loader = networkLoader,
-                                            defaultColor = Color.Transparent,
-                                        )
-                                    LaunchedEffect(Unit) {
-                                        dominantColorState.updateFrom(Url(pokemon.imageUrl.orEmpty()))
-                                        colorCache[pokemon.name.orEmpty()] =
-                                            dominantColorState.color
-                                    }
-                                    dominantColorState.color
-                                }
-
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .padding(8.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .height(210.dp)
-                                        .background(color = dominantColor)
-                                        .clickable {
-                                            val encodedUrl =
-                                                URLEncoder.encode(
-                                                    pokemon.imageUrl,
-                                                    StandardCharsets.UTF_8.toString(),
-                                                )
-                                            val test =
-                                                URLEncoder.encode(
-                                                    colorCache[pokemon.name]?.toHexString(),
-                                                    StandardCharsets.UTF_8.toString(),
-                                                )
-                                            navController.navigate(
-                                                PokemonInfoScreenRoute(
-                                                    pokemon =
-                                                        PokemonDTO(
-                                                            id = pokemon.id,
-                                                            name = pokemon.name,
-                                                            imageUrl = encodedUrl,
-                                                            bgColor = test,
-                                                        ),
-                                                ),
-                                            )
-                                        },
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    IconButton(
-                                        modifier =
-                                            Modifier
-                                                .clip(RoundedCornerShape(bottomEnd = 8.dp))
-                                                .size(24.dp)
-                                                .background(color = Color.White)
-                                                .padding(4.dp)
-                                                .align(Alignment.Start),
-                                        onClick = { /*TODO*/ },
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Favorite,
-                                            contentDescription = "Favorite",
-                                            tint = Color.Red,
-                                        )
-                                    }
-                                    AsyncImage(
-                                        model = pokemon.imageUrl,
-                                        contentDescription = null,
-                                        modifier =
-                                            Modifier.sharedElement(
-                                                state = rememberSharedContentState(key = pokemon.name.orEmpty()),
-                                                animatedVisibilityScope = animatedVisibilityScope,
-                                                boundsTransform = { _, _ ->
-                                                    tween(
-                                                        durationMillis = 1000,
-                                                    )
-                                                },
-                                            ),
-                                    )
-                                    Box(
-                                        modifier =
-                                            Modifier
-                                                .clip(
-                                                    RoundedCornerShape(
-                                                        topStart = 8.dp,
-                                                        bottomEnd = 8.dp,
-                                                    ),
-                                                ).background(color = Color.White)
-                                                .padding(8.dp)
-                                                .align(Alignment.End),
-                                    ) {
-                                        Text(
-                                            text =
-                                                pokemon.name.orEmpty(),
-                                            style = TextStyle(fontWeight = FontWeight.Bold),
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
+                is CommonState.Success -> {}
                 is CommonState.Error -> {
                     Timber.e(state.message)
                     Toast
@@ -303,6 +202,116 @@ fun SharedTransitionScope.DashboardScreen(
                             state.message,
                             Toast.LENGTH_SHORT,
                         ).show()
+                }
+            }
+            LazyVerticalGrid(
+                state = gridState,
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                contentPadding = PaddingValues(8.dp),
+            ) {
+                items(viewModel.pokemonList.value.size) { item ->
+                    val pokemon = viewModel.pokemonList.value[item]
+                    val dominantColor =
+                        colorCache[pokemon.name] ?: run {
+                            val networkLoader = rememberNetworkLoader()
+                            val dominantColorState =
+                                rememberDominantColorState(
+                                    loader = networkLoader,
+                                    defaultColor = Color.Transparent,
+                                )
+                            LaunchedEffect(Unit) {
+                                dominantColorState.updateFrom(Url(pokemon.imageUrl.orEmpty()))
+                                colorCache[pokemon.name.orEmpty()] =
+                                    dominantColorState.color
+                            }
+                            dominantColorState.color
+                        }
+
+                    Box(
+                        modifier =
+                            Modifier
+                                .padding(8.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .height(210.dp)
+                                .background(color = dominantColor)
+                                .clickable {
+                                    val encodedUrl =
+                                        URLEncoder.encode(
+                                            pokemon.imageUrl,
+                                            StandardCharsets.UTF_8.toString(),
+                                        )
+                                    val test =
+                                        URLEncoder.encode(
+                                            colorCache[pokemon.name]?.toHexString(),
+                                            StandardCharsets.UTF_8.toString(),
+                                        )
+                                    navController.navigate(
+                                        PokemonInfoScreenRoute(
+                                            pokemon =
+                                                PokemonDTO(
+                                                    id = pokemon.id,
+                                                    name = pokemon.name,
+                                                    imageUrl = encodedUrl,
+                                                    bgColor = test,
+                                                ),
+                                        ),
+                                    )
+                                },
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            IconButton(
+                                modifier =
+                                    Modifier
+                                        .clip(RoundedCornerShape(bottomEnd = 8.dp))
+                                        .size(24.dp)
+                                        .background(color = Color.White)
+                                        .padding(4.dp)
+                                        .align(Alignment.Start),
+                                onClick = { /*TODO*/ },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Favorite,
+                                    contentDescription = "Favorite",
+                                    tint = Color.Red,
+                                )
+                            }
+                            AsyncImage(
+                                model = pokemon.imageUrl,
+                                contentDescription = null,
+                                modifier =
+                                    Modifier.sharedElement(
+                                        state = rememberSharedContentState(key = pokemon.name.orEmpty()),
+                                        animatedVisibilityScope = animatedVisibilityScope,
+                                        boundsTransform = { _, _ ->
+                                            tween(
+                                                durationMillis = 1000,
+                                            )
+                                        },
+                                    ),
+                            )
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .clip(
+                                            RoundedCornerShape(
+                                                topStart = 8.dp,
+                                                bottomEnd = 8.dp,
+                                            ),
+                                        ).background(color = Color.White)
+                                        .padding(8.dp)
+                                        .align(Alignment.End),
+                            ) {
+                                Text(
+                                    text =
+                                        pokemon.name.orEmpty(),
+                                    style = TextStyle(fontWeight = FontWeight.Bold),
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

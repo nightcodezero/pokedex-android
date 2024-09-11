@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
@@ -23,6 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
@@ -71,7 +74,7 @@ fun SharedTransitionScope.PokemonInfoScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AsyncImage(
-                    model = pokemon.imageUrl ?: "",
+                    model = pokemon.imageUrl.orEmpty(),
                     contentDescription = null,
                     modifier =
                         Modifier.sharedElement(
@@ -82,7 +85,17 @@ fun SharedTransitionScope.PokemonInfoScreen(
                             },
                         ),
                 )
-                Text(text = pokemon.name ?: "")
+                Text(
+                    modifier =
+                        Modifier
+                            .padding(12.dp)
+                            .background(
+                                color = Color.White,
+                                shape = RoundedCornerShape(16.dp),
+                            ).padding(horizontal = 16.dp, vertical = 8.dp),
+                    text = pokemon.name.orEmpty(),
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                )
             }
             IconButton(
                 modifier =

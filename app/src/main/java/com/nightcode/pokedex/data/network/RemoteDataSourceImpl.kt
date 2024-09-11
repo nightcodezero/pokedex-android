@@ -8,7 +8,7 @@ class RemoteDataSourceImpl(
     override suspend fun fetchPokemonList(
         offset: Int,
         limit: Int,
-    ) = pokedexService.fetchPokemonList()
+    ) = pokedexService.fetchPokemonList(offset, limit)
 
     override suspend fun fetchPokemonInfo(name: String) = pokedexService.fetchPokemonInfo(name)
 }

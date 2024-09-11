@@ -10,11 +10,14 @@ import kotlinx.coroutines.flow.flow
 class HomeRepositoryImpl(
     private val remote: RemoteDataSource,
 ) : HomeRepository {
-    override suspend fun fetchPokemonList(): Flow<Result<PokemonResponse>> =
+    override suspend fun fetchPokemonList(
+        offset: Int,
+        limit: Int,
+    ): Flow<Result<PokemonResponse>> =
         flow {
             emit(
                 safeApiCall {
-                    remote.fetchPokemonList(0, 20)
+                    remote.fetchPokemonList(offset, limit)
                 },
             )
         }

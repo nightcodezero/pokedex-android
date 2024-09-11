@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,13 +32,16 @@ class PokemonViewModel(
 ) : ViewModel() {
     private val _pokemonUiState = MutableStateFlow<CommonState<List<PokemonDTO>>>(CommonState.Idle)
     val pokemonUiState: StateFlow<CommonState<List<PokemonDTO>>> = _pokemonUiState
+    private val _offset = MutableStateFlow(0)
+    private val _pokemonList = MutableStateFlow<List<PokemonDTO>>(emptyList())
+    val pokemonList: StateFlow<List<PokemonDTO>> = _pokemonList
 
     fun fetchPokemonListAndDetail() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 _pokemonUiState.value = CommonState.Loading
                 repository
-                    .fetchPokemonList()
+                    .fetchPokemonList(_offset.value, 20)
                     .shareIn(
                         scope = viewModelScope,
                         started = SharingStarted.WhileSubscribed(),
@@ -45,27 +49,35 @@ class PokemonViewModel(
                     ).collect { res ->
                         res
                             .onSuccess { data ->
-                                val pokemonList = mutableListOf<PokemonDTO>()
-
                                 data.results.forEach { result ->
                                     result.name.let { name ->
-                                        pokemonList.add(
-                                            PokemonDTO(
-                                                1,
-                                                name = name,
-                                                imageUrl = result.imageUrl,
-                                                bgColor = "black",
-                                            ),
-                                        )
+                                        _pokemonList.value =
+                                            pokemonList.value.toMutableList().apply {
+                                                add(
+                                                    PokemonDTO(
+                                                        1,
+                                                        name = name,
+                                                        imageUrl = result.imageUrl,
+                                                        bgColor = "black",
+                                                    ),
+                                                )
+                                            }
                                     }
                                 }
-                                _pokemonUiState.value = CommonState.Success(pokemonList)
+                                _pokemonUiState.value = CommonState.Success(pokemonList.value)
                             }.onFailure { err ->
                                 _pokemonUiState.value =
                                     CommonState.Error(err.message ?: "An error occurred")
                             }
                     }
             }
+        }
+    }
+
+    fun fetchMorePokemon() {
+        viewModelScope.launch {
+            _offset.value += 20
+            fetchPokemonListAndDetail()
         }
     }
 }
