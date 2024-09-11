@@ -19,8 +19,15 @@ style:
 complexity:
   NamedArguments:
     active: true
+  LongMethod:
+    active: true
+    excludes: [ '**/test/**', '**/**Test/**' ]
+    threshold: 60
+    ignoreAnnotated: [ 'Composable' ]
 
 naming:
   FunctionNaming:
     active: true
     ignoreAnnotated: [ 'Composable' ]
+  MatchingDeclarationName:
+    active: false

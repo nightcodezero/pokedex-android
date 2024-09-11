@@ -53,7 +53,6 @@ data class PokemonInfoScreenRoute(
 @Composable
 fun SharedTransitionScope.PokemonInfoScreen(
     pokemon: PokemonDTO,
-    viewModel: PokemonViewModel = koinViewModel(),
     navController: NavController,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {

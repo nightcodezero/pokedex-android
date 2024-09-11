@@ -3,6 +3,7 @@ package com.nightcode.pokedex.data.network.model
 import androidx.compose.runtime.Immutable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Locale
 import kotlin.random.Random
 
 @Immutable
@@ -31,11 +32,11 @@ data class PokemonInfo(
         stats.firstOrNull { it.stat.name == "speed" }?.baseStat ?: Random.nextInt(MAX_SPEED)
     }
 
-    fun getIdString(): String = String.format("#%03d", id)
+    fun getIdString(): String = String.format(Locale.US, "#%03d", id)
 
-    fun getWeightString(): String = String.format("%.1f KG", weight.toFloat() / 10)
+    fun getWeightString(): String = String.format(Locale.US,"%.1f KG", weight.toFloat() / 10)
 
-    fun getHeightString(): String = String.format("%.1f M", height.toFloat() / 10)
+    fun getHeightString(): String = String.format(Locale.US,"%.1f M", height.toFloat() / 10)
 
     fun getHpString(): String = " $hp/$MAX_HP"
 
