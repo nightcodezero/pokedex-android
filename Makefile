@@ -57,6 +57,12 @@ apk-release: ## Build apk file in release mode
 	@echo "👉 Building apk file in release mode..."
 	@./gradlew assembleRelease
 
+.PHONY: install-hooks
+install-hooks: ## Setup pre-commit hooks
+	@echo "👉 Installing pre-commit hooks..."
+	@cp .githooks/pre-commit .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+
 .PHONY: help
 help: ## Show help message
 	@echo "⚡️ List of available commands:"
