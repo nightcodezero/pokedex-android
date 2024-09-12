@@ -34,9 +34,9 @@ data class PokemonInfo(
 
     fun getIdString(): String = String.format(Locale.US, "#%03d", id)
 
-    fun getWeightString(): String = String.format(Locale.US,"%.1f KG", weight.toFloat() / 10)
+    fun getWeightString(): String = String.format(Locale.US, "%.1f KG", weight.toFloat() / 10)
 
-    fun getHeightString(): String = String.format(Locale.US,"%.1f M", height.toFloat() / 10)
+    fun getHeightString(): String = String.format(Locale.US, "%.1f M", height.toFloat() / 10)
 
     fun getHpString(): String = " $hp/$MAX_HP"
 
