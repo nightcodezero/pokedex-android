@@ -32,10 +32,11 @@ internal fun mapToException(throwable: Throwable?): Throwable =
     when (throwable) {
         is HttpException -> Exception(throwable.response()?.errorBody().toString())
         is ConnectException, is UnknownHostException, is SocketTimeoutException, is IOException -> {
-            if (Connectivity.checkInternetConnection(SocketFactory.getDefault()).isSuccess)
-                 Exception(throwable.localizedMessage.orEmpty())
-            else
+            if (Connectivity.checkInternetConnection(SocketFactory.getDefault()).isSuccess) {
+                Exception(throwable.localizedMessage.orEmpty())
+            } else {
                 Exception("No internet connection")
+            }
         }
         else -> Exception("Unknown error")
     }
