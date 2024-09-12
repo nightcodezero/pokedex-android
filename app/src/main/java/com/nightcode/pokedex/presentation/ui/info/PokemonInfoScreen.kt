@@ -31,33 +31,34 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
 import coil.compose.AsyncImage
-import com.nightcode.pokedex.data.network.model.PokemonDTO
-import com.nightcode.pokedex.data.network.model.serializableType
+import com.nightcode.pokedex.data.network.model.Pokemon
+import com.nightcode.pokedex.utils.serializableType
 import com.nightcode.pokedex.utils.toColor
 import kotlinx.serialization.Serializable
-import org.koin.androidx.compose.koinViewModel
 import kotlin.reflect.typeOf
 
 @Serializable
 data class PokemonInfoScreenRoute(
-    val pokemon: PokemonDTO,
+    val pokemon: Pokemon,
+    val backgroundColor: String,
 ) {
     companion object {
-        val typeMap = mapOf(typeOf<PokemonDTO>() to serializableType<PokemonDTO>())
+        val typeMap = mapOf(typeOf<Pokemon>() to serializableType<Pokemon>())
 
-        fun from(savedStateHandle: SavedStateHandle) = savedStateHandle.toRoute<PokemonDTO>(typeMap)
+        fun from(savedStateHandle: SavedStateHandle) = savedStateHandle.toRoute<Pokemon>(typeMap)
     }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.PokemonInfoScreen(
-    pokemon: PokemonDTO,
+    pokemon: Pokemon,
+    backgroundColor: String,
     navController: NavController,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     Scaffold(
-        containerColor = pokemon.bgColor?.toColor() ?: Color.Transparent,
+        containerColor = backgroundColor.toColor(),
     ) { innerPadding ->
         Box(
             modifier =
@@ -69,15 +70,15 @@ fun SharedTransitionScope.PokemonInfoScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .background(color = pokemon.bgColor?.toColor() ?: Color.Transparent),
+                        .background(color = backgroundColor.toColor()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AsyncImage(
-                    model = pokemon.imageUrl.orEmpty(),
+                    model = pokemon.url,
                     contentDescription = null,
                     modifier =
                         Modifier.sharedElement(
-                            state = rememberSharedContentState(key = pokemon.name.orEmpty()),
+                            state = rememberSharedContentState(key = pokemon.name),
                             animatedVisibilityScope = animatedVisibilityScope,
                             boundsTransform = { initial, target ->
                                 tween(durationMillis = 1000)
@@ -92,7 +93,7 @@ fun SharedTransitionScope.PokemonInfoScreen(
                                 color = Color.White,
                                 shape = RoundedCornerShape(16.dp),
                             ).padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = pokemon.name.orEmpty(),
+                    text = pokemon.name,
                     style = TextStyle(fontWeight = FontWeight.Bold),
                 )
             }

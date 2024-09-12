@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,7 +59,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.kmpalette.loader.rememberNetworkLoader
 import com.kmpalette.rememberDominantColorState
-import com.nightcode.pokedex.data.network.model.PokemonDTO
+import com.nightcode.pokedex.data.network.model.Pokemon
 import com.nightcode.pokedex.presentation.ui.info.CommonState
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreenRoute
 import com.nightcode.pokedex.presentation.ui.info.PokemonViewModel
@@ -92,7 +93,6 @@ fun SharedTransitionScope.DashboardScreen(
         }
     }
 
-    // load more if scrolled to bottom
     LaunchedEffect(reachedBottom) {
         if (reachedBottom) {
             Timber.tag("DashboardScreen").d("Reached bottom")
@@ -142,57 +142,8 @@ fun SharedTransitionScope.DashboardScreen(
             when (val state = viewModel.pokemonUiState.collectAsState().value) {
                 is CommonState.Idle -> {}
                 is CommonState.Loading -> {
-//                    if (viewModel.offset.collectAsStateWithLifecycle().value == 20) {
-//                        val fakeData =
-//                            List(20) { PokemonDTO(id = it, name = "", imageUrl = "", bgColor = "") }
-//                        LazyVerticalGrid(
-//                            columns = GridCells.Adaptive(minSize = 128.dp),
-//                            contentPadding = PaddingValues(8.dp),
-//                        ) {
-//                            items(fakeData.size) { _ ->
-//                                Box(
-//                                    modifier =
-//                                        Modifier
-//                                            .padding(8.dp)
-//                                            .clip(RoundedCornerShape(8.dp))
-//                                            .height(210.dp)
-//                                            .background(color = Color.Gray)
-//                                            .shimmerEffect(),
-//                                ) {
-//                                    Column(
-//                                        modifier = Modifier.fillMaxWidth(),
-//                                        horizontalAlignment = Alignment.CenterHorizontally,
-//                                    ) {
-//                                        Box(
-//                                            modifier =
-//                                                Modifier
-//                                                    .clip(RoundedCornerShape(bottomEnd = 8.dp))
-//                                                    .size(24.dp)
-//                                                    .background(color = Color.LightGray)
-//                                                    .align(Alignment.Start)
-//                                                    .shimmerEffect(),
-//                                        )
-//                                        Spacer(modifier = Modifier.weight(1f))
-//                                        Box(
-//                                            modifier =
-//                                                Modifier
-//                                                    .clip(
-//                                                        RoundedCornerShape(
-//                                                            topStart = 8.dp,
-//                                                            bottomEnd = 8.dp,
-//                                                        ),
-//                                                    ).width(100.dp)
-//                                                    .height(24.dp)
-//                                                    .background(color = Color.Gray)
-//                                                    .align(Alignment.End)
-//                                                    .shimmerEffect(),
-//                                        )
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
                 }
+
                 is CommonState.Success -> {}
                 is CommonState.Error -> {
                     Timber.e(state.message)
@@ -220,8 +171,8 @@ fun SharedTransitionScope.DashboardScreen(
                                     defaultColor = Color.Transparent,
                                 )
                             LaunchedEffect(Unit) {
-                                dominantColorState.updateFrom(Url(pokemon.imageUrl.orEmpty()))
-                                colorCache[pokemon.name.orEmpty()] =
+                                dominantColorState.updateFrom(Url(pokemon.imageUrl))
+                                colorCache[pokemon.name] =
                                     dominantColorState.color
                             }
                             dominantColorState.color
@@ -240,20 +191,10 @@ fun SharedTransitionScope.DashboardScreen(
                                             pokemon.imageUrl,
                                             StandardCharsets.UTF_8.toString(),
                                         )
-                                    val test =
-                                        URLEncoder.encode(
-                                            colorCache[pokemon.name]?.toHexString(),
-                                            StandardCharsets.UTF_8.toString(),
-                                        )
                                     navController.navigate(
                                         PokemonInfoScreenRoute(
-                                            pokemon =
-                                                PokemonDTO(
-                                                    id = pokemon.id,
-                                                    name = pokemon.name,
-                                                    imageUrl = encodedUrl,
-                                                    bgColor = test,
-                                                ),
+                                            pokemon.copy(url = encodedUrl),
+                                            dominantColor.toHexString(),
                                         ),
                                     )
                                 },
@@ -308,6 +249,57 @@ fun SharedTransitionScope.DashboardScreen(
                                     text =
                                         pokemon.name.orEmpty(),
                                     style = TextStyle(fontWeight = FontWeight.Bold),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (uiState is CommonState.Loading) {
+                val fakeData =
+                    List(20) { Pokemon(nameField = "", url = "") }
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 128.dp),
+                    contentPadding = PaddingValues(8.dp),
+                ) {
+                    items(fakeData.size) { _ ->
+                        Box(
+                            modifier =
+                                Modifier
+                                    .padding(8.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .height(210.dp)
+                                    .background(color = Color.Gray)
+                                    .shimmerEffect(),
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .clip(RoundedCornerShape(bottomEnd = 8.dp))
+                                            .size(24.dp)
+                                            .background(color = Color.LightGray)
+                                            .align(Alignment.Start)
+                                            .shimmerEffect(),
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .clip(
+                                                RoundedCornerShape(
+                                                    topStart = 8.dp,
+                                                    bottomEnd = 8.dp,
+                                                ),
+                                            ).width(100.dp)
+                                            .height(24.dp)
+                                            .background(color = Color.Gray)
+                                            .align(Alignment.End)
+                                            .shimmerEffect(),
                                 )
                             }
                         }

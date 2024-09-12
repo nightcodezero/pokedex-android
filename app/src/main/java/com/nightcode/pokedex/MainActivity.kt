@@ -36,7 +36,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val args = it.toRoute<PokemonInfoScreenRoute>()
                             PokemonInfoScreen(
-                                args.pokemon,
+                                pokemon = args.pokemon,
+                                backgroundColor = args.backgroundColor,
                                 navController = navController,
                                 animatedVisibilityScope = this,
                             )

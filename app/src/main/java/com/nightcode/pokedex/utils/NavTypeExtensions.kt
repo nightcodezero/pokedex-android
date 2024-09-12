@@ -1,18 +1,9 @@
-package com.nightcode.pokedex.data.network.model
+package com.nightcode.pokedex.utils
 
 import android.os.Bundle
 import androidx.navigation.NavType
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-
-@Serializable
-data class PokemonDTO(
-    val id: Int?,
-    val name: String?,
-    var imageUrl: String?,
-    var bgColor: String?,
-)
 
 inline fun <reified T : Any> serializableType(
     isNullableAllowed: Boolean = false,
