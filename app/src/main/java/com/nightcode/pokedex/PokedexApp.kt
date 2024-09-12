@@ -1,6 +1,7 @@
 package com.nightcode.pokedex
 
 import android.app.Application
+import com.nightcode.pokedex.di.appModule
 import com.nightcode.pokedex.di.networkModule
 import com.nightcode.pokedex.di.remoteDataSourceModule
 import com.nightcode.pokedex.di.repositoryModule
@@ -16,7 +17,13 @@ class PokedexApp : Application() {
         startKoin {
             androidLogger()
             androidContext(this@PokedexApp)
-            modules(viewModelModule, repositoryModule, networkModule, remoteDataSourceModule)
+            modules(
+                appModule,
+                viewModelModule,
+                repositoryModule,
+                networkModule,
+                remoteDataSourceModule,
+            )
         }
     }
 }

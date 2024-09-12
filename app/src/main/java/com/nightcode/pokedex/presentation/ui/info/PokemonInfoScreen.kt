@@ -80,7 +80,7 @@ fun SharedTransitionScope.PokemonInfoScreen(
                         Modifier.sharedElement(
                             state = rememberSharedContentState(key = pokemon.name),
                             animatedVisibilityScope = animatedVisibilityScope,
-                            boundsTransform = { initial, target ->
+                            boundsTransform = { _, _ ->
                                 tween(durationMillis = 1000)
                             },
                         ),
