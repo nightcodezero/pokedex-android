@@ -11,4 +11,10 @@ interface HomeRepository {
     ): Flow<Result<PokemonResponse>>
 
     suspend fun fetchPokemonInfo(name: String): Flow<Result<PokemonInfo>>
+
+    suspend fun saveFavoritePokemon(name: String)
+
+    suspend fun getFavoritePokemon(): List<String>
+
+    suspend fun removeFavoritePokemon(name: String)
 }

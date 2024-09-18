@@ -119,6 +119,7 @@ dependencies {
     implementation(libs.kmpalette.extensions.network)
     implementation(libs.ktor.client.android)
     implementation(libs.rebugger)
+    implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

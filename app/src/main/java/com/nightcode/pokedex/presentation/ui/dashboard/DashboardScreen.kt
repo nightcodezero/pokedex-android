@@ -86,8 +86,11 @@ fun SharedTransitionScope.DashboardScreen(
     val colorCache = rememberSaveable { mutableMapOf<String, Color>() }
     val gridState = rememberLazyGridState()
     val reachedBottom: Boolean by remember { derivedStateOf { gridState.reachedBottom() } }
+    val favoritePokemon by viewModel.favoritePokemon.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
+        viewModel.getFavoritePokemon()
         if (uiState is CommonState.Idle) {
             viewModel.fetchPokemonListAndDetail()
         }
@@ -99,6 +102,8 @@ fun SharedTransitionScope.DashboardScreen(
             viewModel.fetchMorePokemon()
         }
     }
+
+    Timber.tag("DashboardScreen").d("Favorite Pokemon: $favoritePokemon")
 
     Scaffold(
         containerColor = Color.LightGray.copy(alpha = 0.5f),
@@ -211,12 +216,35 @@ fun SharedTransitionScope.DashboardScreen(
                                         .background(color = Color.White)
                                         .padding(4.dp)
                                         .align(Alignment.Start),
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    if (favoritePokemon.contains(pokemon.name)) {
+                                        viewModel.removeFavoritePokemon(pokemon.name)
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Removed from favorite",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+                                    } else {
+                                        viewModel.saveFavoritePokemon(pokemon.name)
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Added to favorite",
+                                                Toast.LENGTH_SHORT,
+                                            ).show()
+                                    }
+                                },
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Favorite,
                                     contentDescription = "Favorite",
-                                    tint = Color.Red,
+                                    tint =
+                                        if (favoritePokemon.contains(pokemon.name)) {
+                                            Color.Red
+                                        } else {
+                                            Color.Gray
+                                        },
                                 )
                             }
                             AsyncImage(
@@ -247,7 +275,7 @@ fun SharedTransitionScope.DashboardScreen(
                             ) {
                                 Text(
                                     text =
-                                        pokemon.name.orEmpty(),
+                                        pokemon.name,
                                     style = TextStyle(fontWeight = FontWeight.Bold),
                                 )
                             }

@@ -34,6 +34,8 @@ class PokemonViewModel(
     private val offset = MutableStateFlow(0)
     private val _pokemonList = MutableStateFlow<List<Pokemon>>(emptyList())
     val pokemonList: StateFlow<List<Pokemon>> = _pokemonList
+    private val _favoritePokemon = MutableStateFlow<List<String>>(emptyList())
+    val favoritePokemon: StateFlow<List<String>> = _favoritePokemon
 
     fun fetchPokemonListAndDetail() {
         viewModelScope.launch {
@@ -63,6 +65,26 @@ class PokemonViewModel(
         viewModelScope.launch {
             offset.value += 20
             fetchPokemonListAndDetail()
+        }
+    }
+
+    fun saveFavoritePokemon(name: String) {
+        viewModelScope.launch {
+            repository.saveFavoritePokemon(name)
+            _favoritePokemon.value = repository.getFavoritePokemon()
+        }
+    }
+
+    fun getFavoritePokemon() {
+        viewModelScope.launch {
+            _favoritePokemon.value = repository.getFavoritePokemon()
+        }
+    }
+
+    fun removeFavoritePokemon(name: String) {
+        viewModelScope.launch {
+            repository.removeFavoritePokemon(name)
+            _favoritePokemon.value = repository.getFavoritePokemon()
         }
     }
 }

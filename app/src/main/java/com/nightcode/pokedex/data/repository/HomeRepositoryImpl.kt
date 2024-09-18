@@ -4,11 +4,13 @@ import com.nightcode.pokedex.data.network.RemoteDataSource
 import com.nightcode.pokedex.data.network.model.PokemonInfo
 import com.nightcode.pokedex.data.network.model.PokemonResponse
 import com.nightcode.pokedex.data.network.safeApiCall
+import com.nightcode.pokedex.data.pref.LocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class HomeRepositoryImpl(
     private val remote: RemoteDataSource,
+    private val local: LocalDataSource,
 ) : HomeRepository {
     override suspend fun fetchPokemonList(
         offset: Int,
@@ -30,4 +32,14 @@ class HomeRepositoryImpl(
                 },
             )
         }
+
+    override suspend fun saveFavoritePokemon(name: String) {
+        local.saveFavoritePokemon(name)
+    }
+
+    override suspend fun getFavoritePokemon(): List<String> = local.getFavoritePokemon()
+
+    override suspend fun removeFavoritePokemon(name: String) {
+        local.removeFavoritePokemon(name)
+    }
 }
