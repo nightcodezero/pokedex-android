@@ -103,8 +103,6 @@ fun SharedTransitionScope.DashboardScreen(
         }
     }
 
-    Timber.tag("DashboardScreen").d("Favorite Pokemon: $favoritePokemon")
-
     Scaffold(
         containerColor = Color.LightGray.copy(alpha = 0.5f),
         topBar = {

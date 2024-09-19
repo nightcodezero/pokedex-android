@@ -1,6 +1,5 @@
 package com.nightcode.pokedex.presentation.ui.info
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -28,9 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
@@ -52,8 +48,6 @@ data class PokemonInfoScreenRoute(
         fun from(savedStateHandle: SavedStateHandle) = savedStateHandle.toRoute<Pokemon>(typeMap)
     }
 }
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

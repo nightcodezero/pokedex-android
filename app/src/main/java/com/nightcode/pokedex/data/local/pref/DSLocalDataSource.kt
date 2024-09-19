@@ -1,4 +1,4 @@
-package com.nightcode.pokedex.data.pref
+package com.nightcode.pokedex.data.local.pref
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,13 +6,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.nightcode.pokedex.data.local.LocalDataSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "Pokedex")
 val FAVORITE_POKEMON = stringPreferencesKey("favorite_pokemon")
 
-class Datastore(
+class DSLocalDataSource(
     private val context: Context,
 ) : LocalDataSource {
     override suspend fun saveFavoritePokemon(name: String) {

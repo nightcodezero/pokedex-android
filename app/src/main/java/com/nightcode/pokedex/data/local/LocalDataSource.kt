@@ -1,4 +1,4 @@
-package com.nightcode.pokedex.data.pref
+package com.nightcode.pokedex.data.local
 
 interface LocalDataSource {
     suspend fun saveFavoritePokemon(name: String)

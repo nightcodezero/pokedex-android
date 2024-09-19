@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -65,7 +66,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
     packaging {
         resources {
@@ -120,6 +121,10 @@ dependencies {
     implementation(libs.ktor.client.android)
     implementation(libs.rebugger)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
