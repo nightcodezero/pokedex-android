@@ -1,8 +1,10 @@
 package com.nightcode.pokedex.presentation.ui.dashboard
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -52,14 +54,17 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.kmpalette.loader.rememberNetworkLoader
 import com.kmpalette.rememberDominantColorState
 import com.nightcode.pokedex.data.network.model.Pokemon
+import com.nightcode.pokedex.data.repository.FakeHomeRepository
 import com.nightcode.pokedex.presentation.ui.info.CommonState
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreenRoute
 import com.nightcode.pokedex.presentation.ui.info.PokemonViewModel
@@ -73,7 +78,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Serializable
-object DashboardScreen
+object DashboardScreenRoute
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -368,3 +373,17 @@ fun Modifier.shimmerEffect(): Modifier =
             size = it.size
         }
     }
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview(showBackground = true)
+@Composable
+fun DashboardScreenPreview() {
+    val navController = rememberNavController()
+    val viewModel = PokemonViewModel(repository = FakeHomeRepository())
+
+    SharedTransitionLayout {
+        AnimatedVisibility(visible = true) {
+            DashboardScreen(animatedVisibilityScope = this, viewModel = viewModel, navController = navController)
+        }
+    }
+}

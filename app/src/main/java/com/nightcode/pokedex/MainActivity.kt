@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.nightcode.pokedex.presentation.theme.PokedexTheme
 import com.nightcode.pokedex.presentation.ui.dashboard.DashboardScreen
+import com.nightcode.pokedex.presentation.ui.dashboard.DashboardScreenRoute
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreen
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreenRoute
 
@@ -24,8 +25,8 @@ class MainActivity : ComponentActivity() {
             PokedexTheme {
                 SharedTransitionLayout {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = DashboardScreen) {
-                        composable<DashboardScreen> {
+                    NavHost(navController = navController, startDestination = DashboardScreenRoute) {
+                        composable<DashboardScreenRoute> {
                             DashboardScreen(
                                 navController = navController,
                                 animatedVisibilityScope = this,
