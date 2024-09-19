@@ -1,8 +1,8 @@
 package com.nightcode.pokedex.data.repository
 
-import com.nightcode.pokedex.data.network.model.Pokemon
-import com.nightcode.pokedex.data.network.model.PokemonInfo
-import com.nightcode.pokedex.data.network.model.PokemonResponse
+import com.nightcode.pokedex.data.remote.model.Pokemon
+import com.nightcode.pokedex.data.remote.model.PokemonInfo
+import com.nightcode.pokedex.data.remote.model.PokemonResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

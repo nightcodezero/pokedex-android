@@ -31,7 +31,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.toRoute
 import coil.compose.AsyncImage
-import com.nightcode.pokedex.data.network.model.Pokemon
+import com.nightcode.pokedex.data.remote.model.Pokemon
 import com.nightcode.pokedex.utils.serializableType
 import com.nightcode.pokedex.utils.toColor
 import kotlinx.serialization.Serializable

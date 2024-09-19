@@ -1,4 +1,4 @@
-package com.nightcode.pokedex.data.network.model
+package com.nightcode.pokedex.data.remote.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
