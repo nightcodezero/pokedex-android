@@ -5,8 +5,8 @@ import com.nightcode.pokedex.data.local.db.PokemonDatabase
 import com.nightcode.pokedex.data.local.db.RoomLocalDataSource
 import com.nightcode.pokedex.data.local.db.dao.PokemonDao
 import com.nightcode.pokedex.data.local.pref.DSLocalDataSource
-import com.nightcode.pokedex.data.network.RemoteDataSource
-import com.nightcode.pokedex.data.network.RemoteDataSourceImpl
+import com.nightcode.pokedex.data.remote.RemoteDataSource
+import com.nightcode.pokedex.data.remote.RemoteDataSourceImpl
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

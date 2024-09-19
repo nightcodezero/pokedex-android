@@ -63,7 +63,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.kmpalette.loader.rememberNetworkLoader
 import com.kmpalette.rememberDominantColorState
-import com.nightcode.pokedex.data.network.model.Pokemon
+import com.nightcode.pokedex.data.remote.model.Pokemon
 import com.nightcode.pokedex.data.repository.FakeHomeRepository
 import com.nightcode.pokedex.presentation.ui.info.CommonState
 import com.nightcode.pokedex.presentation.ui.info.PokemonInfoScreenRoute

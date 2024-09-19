@@ -1,7 +1,7 @@
-package com.nightcode.pokedex.data.network.service
+package com.nightcode.pokedex.data.remote.service
 
-import com.nightcode.pokedex.data.network.model.PokemonInfo
-import com.nightcode.pokedex.data.network.model.PokemonResponse
+import com.nightcode.pokedex.data.remote.model.PokemonInfo
+import com.nightcode.pokedex.data.remote.model.PokemonResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

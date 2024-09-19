@@ -1,7 +1,7 @@
 package com.nightcode.pokedex.di
 
 import com.nightcode.pokedex.BuildConfig
-import com.nightcode.pokedex.data.network.service.PokedexService
+import com.nightcode.pokedex.data.remote.service.PokedexService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

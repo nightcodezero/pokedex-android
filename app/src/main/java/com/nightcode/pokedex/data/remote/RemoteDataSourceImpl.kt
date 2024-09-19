@@ -1,6 +1,6 @@
-package com.nightcode.pokedex.data.network
+package com.nightcode.pokedex.data.remote
 
-import com.nightcode.pokedex.data.network.service.PokedexService
+import com.nightcode.pokedex.data.remote.service.PokedexService
 
 class RemoteDataSourceImpl(
     private val pokedexService: PokedexService,

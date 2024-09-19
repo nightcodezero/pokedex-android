@@ -1,6 +1,6 @@
-package com.nightcode.pokedex.data.network
+package com.nightcode.pokedex.data.remote
 
-import com.nightcode.pokedex.data.network.model.BaseResponse
+import com.nightcode.pokedex.data.remote.model.BaseResponse
 import com.nightcode.pokedex.utils.Connectivity
 import retrofit2.HttpException
 import retrofit2.Response

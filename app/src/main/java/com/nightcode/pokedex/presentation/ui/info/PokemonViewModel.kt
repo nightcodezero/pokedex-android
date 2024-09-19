@@ -2,7 +2,7 @@ package com.nightcode.pokedex.presentation.ui.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nightcode.pokedex.data.network.model.Pokemon
+import com.nightcode.pokedex.data.remote.model.Pokemon
 import com.nightcode.pokedex.data.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
