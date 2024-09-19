@@ -8,3 +8,26 @@ Futuristic Pokedex app built with Jetpack Compose.
 </p>
 
 ## Tech stack & Open-source libraries
+
+## Folder Structure
+```
+📦app
+ ┣ 📂data
+ ┃ ┣ 📂local
+ ┃ ┃ ┗ 📜PokedexDatabase.kt
+ ┃ ┣ 📂model
+ ┃ ┃ ┗ 📜Pokedex.kt
+ ┃ ┗ 📂remote
+ ┃ ┃ ┗ 📜PokedexService.kt
+ ┣ 📂di
+ ┃ ┗ 📜AppModule.kt
+ ┣ 📂presentation
+ ┃ ┣ 📂pokedex
+ ┃ ┃ ┣ 📜PokedexScreen.kt
+ ┃ ┃ ┗ 📜PokedexViewModel.kt
+ ┃ ┗ 📜MainScreen.kt
+ ┣ 📂util
+ ┃ ┗ 📜Constants.kt
+ ┣ 📜PokedexApp.kt
+ ┗ 📜MainActivity.kt
+```
